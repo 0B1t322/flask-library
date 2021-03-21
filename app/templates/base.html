@@ -1,0 +1,17 @@
+<html>
+    <head>
+        <title>library</title>
+        {% for style_path in styles %}
+        <link rel="stylesheet" href={{ style_path }}>
+        {% endfor %}
+    </head>
+    <body>
+        <div>
+            Library:
+            <a href="/">Home</a>
+            <a href="/books">Books</a>
+        </div>
+        <hr>
+        {% block content %}{% endblock %}
+    </body>
+</html>

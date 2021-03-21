@@ -1,0 +1,23 @@
+version: "3.8"
+services:
+  jun.db:
+    image: mysql
+    container_name: jun.db
+    ports:
+    - 3306:3306
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MY_SQL_USER: docker
+      MY_SQL_PASSWORD: docker
+    volumes:
+      - "./db/scripts/init.sql:/docker-entrypoint-initdb.d/1.sql"
+      - "wp-db:/var/lib/mysql:rw"
+    networks:
+      - database
+
+networks:
+  database:
+    driver: "bridge"
+
+volumes:
+  wp-db: {}

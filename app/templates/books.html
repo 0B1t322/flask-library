@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+{% extends "base.html" %}
+
+{% block content %}
+    <div>
+        <table>
+            <tr>
+                <th>
+                    Название
+                </th>
+                <th>
+                    Автор
+                </th>
+            </tr>
+                {% for book in books %}
+            <tr>
+                <td>
+                    {{ book.name }}
+                </td>
+                <td>
+                    {% for author in  book.authors %}
+                    {{ author.name }}
+                    {% endfor %}
+                </td>
+            </tr>
+                {% endfor %}
+        </table>
+    </div>
+{% endblock %}
