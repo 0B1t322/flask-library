@@ -6,19 +6,18 @@ books_and_authors = db.Table('books_and_authors',
 
                              )
 
-
 class Book(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(140))
-    authors = db.relationship(
-        'Author',
-        secondary=books_and_authors,
-        lazy='subquery',
-        backref=db.backref(
-            'books',
-            lazy=True,
-        )
-    )
+    # authors = db.relationship(
+    #     'Author',
+    #     secondary=books_and_authors,
+    #     lazy='subquery',
+    #     backref=db.backref(
+    #         'books',
+    #         lazy=True,
+    #     )
+    # )
     def __init__(self, name):
         self.name = name
 
@@ -26,15 +25,15 @@ class Book(db.Model):
 class Author(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(140))
-    # books = db.relationship(
-    #     'Book',
-    #     secondary=books_and_authors,
-    #     lazy='subquery',
-    #     backref=db.backref(
-    #         'authors',
-    #         lazy=True,
-    #     )
-    # )
+    books = db.relationship(
+        'Book',
+        secondary=books_and_authors,
+        lazy='subquery',
+        backref=db.backref(
+            'authors',
+            lazy=True,
+        )
+    )
 
     def __init__(self, name):
         self.name = name
