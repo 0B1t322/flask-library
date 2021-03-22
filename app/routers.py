@@ -63,13 +63,26 @@ def check_if_exist(author_name, book_name):
 @app.route('/books/update/<author_id>/<book_id>', methods=['GET', 'POST'])
 def update(author_id, book_id):
     form = BookForm()
+    err = ''
     prev_author = Author.query.get_or_404(author_id)
     prev_book = Book.query.get_or_404(book_id)
-    form.author.data = prev_author.name
-    form.name.data = prev_book.name
-    err = ''
-    if form.validate_on_submit():
-        pass
+    if not form.validate_on_submit():
+        form.author.data = prev_author.name
+        form.name.data = prev_book.name
+    else:
+        if form.author.data == prev_author.name and form.name.data == prev_book.name:
+            print(f'from: {form.name.data} prev: {prev_book.name}')
+            print(f'from: {form.author.data} prev: {prev_author.name}')
+            return redirect(url_for('books'))
+        if check_if_exist(author_name=form.author.data, book_name=form.name.data):
+            err = 'Book with this author exist'
+        if err == '':
+            prev_author.name = form.author.data
+            prev_book.name = form.name.data
+            db.session.add(prev_book)
+            db.session.add(prev_author)
+            db.session.commit()
+            return redirect(url_for('books'))
     return render_template(
         'book_form.html',
         form=form,
