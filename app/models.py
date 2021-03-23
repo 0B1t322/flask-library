@@ -1,10 +1,13 @@
 from app import db
+from json import JSONEncoder
+import pickle
 
 books_and_authors = db.Table('books_and_authors',
                              db.Column('book_id', db.Integer, db.ForeignKey('book.id'), primary_key=True),
                              db.Column('author_id', db.Integer, db.ForeignKey('author.id'), primary_key=True),
 
                              )
+
 
 class Book(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -35,5 +38,13 @@ class Author(db.Model):
         )
     )
 
+
     def __init__(self, name):
         self.name = name
+
+
+class PythonObjectEncoder(JSONEncoder):
+    def default(self, obj):
+        if isinstance(obj, (list, dict, str, int, float, bool, type(None))):
+            return JSONEncoder.default(self, obj)
+        return {'_python_object': pickle.dumps(obj)}

@@ -2,7 +2,29 @@
 {% extends "base.html" %}
 {% block content %}
     <div class="library">
-        <div class="table-library">
+        <div class="rows table-delete left">
+            <table>
+                <tr>
+                    <th>Удалить</th>
+                </tr>
+                {% for author in authors %}
+                        {% for book in author.books %}
+                <tr id="{{ book.id }}" class="tr_{{ book.id }}">
+                    <td>
+                        <div class="button-wrapper">
+{#                        <form id="delete_form" method="delete" class="delete_form">#}
+{#                            <input type="submit" value="x" onclick="()=>{console.log('hello world')}">#}
+{#                        </form>#}
+
+                            <button type="submit" onclick="delete_book({{ book.id }})">x</button>
+                        </div>
+                    </td>
+                </tr>
+                    {% endfor %}
+                {% endfor %}
+            </table>
+        </div>
+        <div class="table-library left">
             <table>
                 <tr>
                     <th>
@@ -14,7 +36,7 @@
                 </tr>
                     {% for author in authors %}
                         {% for book in author.books %}
-                <tr>
+                <tr id="{{ book.id }}" class="tr_{{ book.id }}">
                     <td>
                         {{ book.name }}
                     </td>
@@ -26,14 +48,14 @@
                 {% endfor %}
             </table>
         </div>
-        <div class="rows table-update">
+        <div class="rows table-update left">
             <table>
                 <tr>
                     <th>Изменить</th>
                 </tr>
                 {% for author in authors %}
                         {% for book in author.books %}
-                <tr>
+                <tr id="{{ book.id }}" class="tr_{{ book.id }}">
                     <td>
                         <a href="/books/update/{{ author.id }}/{{ book.id }}">x</a>
                     </td>
@@ -43,4 +65,43 @@
             </table>
         </div>
     </div>
+    <script defer>
+    function delete_book(id) {
+        $.ajax({
+            url: '/books/delete/' + id,
+            type: 'delete',
+            success: (res) => {
+                console.log('DELETED')
+            },
+            error: (err) => {
+                console.log("err: ", err)
+            }
+        })
+        console.log('hide')
+        hide_tr(id)
+    }
+
+    {#$(document).ready(() => {#}
+    {#        $("#delete_form").onclick((event) => {#}
+    {#            sendAjaxForm("delete_form")#}
+    {#            event.preventDefault()#}
+    {#        })#}
+    {#    })#}
+
+
+{#    #}
+{#    $(document).on('submit', 'form.delete_form', (event) => {#}
+{#        event.preventDefault()#}
+{#        console.log($('#delete_form').attr('action'))#}
+{#    })#}
+
+
+    const hide_tr = (id) => {
+        let elems = document.getElementsByClassName('tr_'+id)
+        console.log(elems)
+        for(let e of elems) {
+            e.setAttribute('style', "display:none")
+        }
+    }
+    </script>
 {% endblock %}

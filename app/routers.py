@@ -1,8 +1,8 @@
 from app import app, path_resolver, db
-from flask import render_template, flash, redirect, url_for, request
-from app.models import Book, Author, books_and_authors
+from flask import render_template, flash, redirect, url_for, request, jsonify
+from app.models import Book, Author, PythonObjectEncoder
 from app.forms import BookForm
-
+import json
 
 @app.route('/')
 def index():
@@ -22,6 +22,10 @@ def books():
         ]
     )
 
+# @app.route('/get_books')
+# def get_books():
+#     authors = Author.query.all()
+#     return jsonify(authors=authors)
 
 @app.route('/books/add', methods=['GET', 'POST'])
 def books_add():
@@ -88,3 +92,10 @@ def update(author_id, book_id):
         form=form,
         err=err,
     )
+
+@app.route('/books/delete/<book_id>', methods=['DELETE'])
+def delete_book(book_id):
+    book = Book.query.get_or_404(book_id)
+    db.session.delete(book)
+    db.session.commit()
+    return jsonify(success=True)

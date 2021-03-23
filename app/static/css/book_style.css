@@ -39,12 +39,7 @@
     margin: 0;
 }
 
-.table-library {
-    display: inline-block;
-    float: left;
-}
-
-.table-update {
+.left {
     display: inline-block;
     float: left;
 }
@@ -78,5 +73,10 @@
 .rows td:first-child {
 /*     border-left: 2px solid #56433D; */
 /*     border-right: none; */
+}
+
+.button-wrapper {
+    height: 16px;
+    text-align: center ;
 }
 
