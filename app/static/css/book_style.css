@@ -80,3 +80,8 @@
     text-align: center ;
 }
 
+.search input {
+    align-self: center ;
+    text-align: center ;
+    height: 36px
+}
