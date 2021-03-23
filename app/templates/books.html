@@ -24,7 +24,7 @@
                 {% endfor %}
             </table>
         </div>
-        <div class="table-library left">
+        <div class="table-library left" id="table-library">
             <table>
                 <tr>
                     <th>
@@ -36,11 +36,11 @@
                 </tr>
                     {% for author in authors %}
                         {% for book in author.books %}
-                <tr id="{{ book.id }}" class="tr_{{ book.id }}">
-                    <td>
+                <tr id="{{ book.id }}" class="tr_{{ book.id }} table_rows">
+                    <td class="book_name">
                         {{ book.name }}
                     </td>
-                    <td>
+                    <td class="author_name">
                         {{ author.name }}
                     </td>
                 </tr>
@@ -64,8 +64,33 @@
                 {% endfor %}
             </table>
         </div>
+        <div class="rows search left">
+            <table>
+                <tr>
+                    <th>
+                        <label>
+                            <input type="search" oninput="search(this.value)">
+                        </label>
+                    </th>
+                </tr>
+            </table>
+        </div>
     </div>
     <script defer>
+    function search(text) {
+        let tableLibrary = document.getElementById('table-library')
+        let tableRows = tableLibrary.getElementsByClassName("table_rows")
+
+        for(let row of tableRows) {
+           if (!row.textContent.toLowerCase().includes(text.toLowerCase())) {
+               hide_tr(row.getAttribute('id'))
+           } else {
+               show_tr(row.getAttribute('id'))
+           }
+        }
+
+    }
+
     function delete_book(id) {
         $.ajax({
             url: '/books/delete/' + id,
@@ -77,30 +102,27 @@
                 console.log("err: ", err)
             }
         })
-        console.log('hide')
         hide_tr(id)
+        delete_id_on_tr(id)
     }
-
-    {#$(document).ready(() => {#}
-    {#        $("#delete_form").onclick((event) => {#}
-    {#            sendAjaxForm("delete_form")#}
-    {#            event.preventDefault()#}
-    {#        })#}
-    {#    })#}
-
-
-{#    #}
-{#    $(document).on('submit', 'form.delete_form', (event) => {#}
-{#        event.preventDefault()#}
-{#        console.log($('#delete_form').attr('action'))#}
-{#    })#}
-
-
     const hide_tr = (id) => {
         let elems = document.getElementsByClassName('tr_'+id)
-        console.log(elems)
         for(let e of elems) {
             e.setAttribute('style', "display:none")
+        }
+    }
+
+    const delete_id_on_tr = (id) => {
+        let elems = document.getElementsByClassName('tr_'+id)
+        for(let e of elems) {
+            e.removeAttribute('id')
+        }
+    }
+
+    const show_tr = (id) => {
+        let elems = document.getElementsByClassName('tr_'+id)
+        for(let e of elems) {
+            e.removeAttribute('style')
         }
     }
     </script>
